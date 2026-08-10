@@ -51,7 +51,7 @@ public class AuthService {
         return issueTokens(user);
     }
     
-    @Transactional(readOnly = true)
+    @Transactional
     public AuthResponse login(LoginRequest request) {
         String email = request.email().toLowerCase(Locale.ROOT);
         
@@ -109,6 +109,8 @@ public class AuthService {
     
     private AuthResponse issueTokens(User user) {
         String accessToken = jwtService.createAccessToken(user);
+        
+        refreshTokenRepository.revokeAllActiveByUserId(user.getId(), Instant.now());
         
         String refreshTokenValue = UUID.randomUUID().toString();
         String refreshTokenHash = TokenHashUtil.sha256(refreshTokenValue);
