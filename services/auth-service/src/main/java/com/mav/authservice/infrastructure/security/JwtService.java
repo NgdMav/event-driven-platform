@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-class JwtService {
+public class JwtService {
     
     private final SecretKey key;
     @Getter
