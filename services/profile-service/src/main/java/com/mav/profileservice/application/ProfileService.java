@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-class ProfileService {
+public class ProfileService {
     
     private final ProfileRepository profileRepository;
     
