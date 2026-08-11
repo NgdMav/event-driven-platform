@@ -1,0 +1,35 @@
+services:
+  auth-db:
+    image: postgres:latest
+    container_name: auth-db
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: fit
+      POSTGRES_PASSWORD: fit_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - auth-db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fit -d auth_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+#  ./mvnw spring-boot:build-image "-Dspring-boot.build-image.imageName=ngdmav/fitnessapp-auth-service"
+  auth-service:
+    image: ngdmav/fitnessapp-auth-service
+    container_name: auth-service
+    environment:
+      DB_URL: jdbc:postgresql://auth-db:5432/auth_db
+      DB_USERNAME: fit
+      DB_PASSWORD: fit_password
+      AUTH_JWT_SECRET: local-dev-secret-local-dev-secret-local-dev-secret
+    ports:
+      - "8081:8081"
+    depends_on:
+      auth-db:
+        condition: service_healthy
+
+volumes:
+  auth-db-data:
