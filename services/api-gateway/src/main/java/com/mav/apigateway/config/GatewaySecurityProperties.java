@@ -10,7 +10,7 @@ import java.util.List;
 @ConfigurationProperties(prefix = "gateway.security")
 @Getter
 @Setter
-class GatewaySecurityProperties {
+public class GatewaySecurityProperties {
     
     private List<String> publicPaths = new ArrayList<>();
 }
