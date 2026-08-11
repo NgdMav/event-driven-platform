@@ -4,16 +4,18 @@ spring:
 
   cloud:
     gateway:
-      routes:
-        - id: auth-service
-          uri: ${AUTH_SERVICE_URL:http://localhost:8081}
-          predicates:
-            - Path=/api/auth/**
+      server:
+        webmvc:
+          routes:
+            - id: auth-service
+              uri: ${AUTH_SERVICE_URL:http://localhost:8081}
+              predicates:
+                - Path=/api/auth/**
 
-        - id: profile-service
-          uri: ${PROFILE_SERVICE_URL:http://localhost:8082}
-          predicates:
-            - Path=/api/profile/**
+            - id: profile-service
+              uri: ${PROFILE_SERVICE_URL:http://localhost:8082}
+              predicates:
+                - Path=/api/profile/**
 
 server:
   port: 8080
