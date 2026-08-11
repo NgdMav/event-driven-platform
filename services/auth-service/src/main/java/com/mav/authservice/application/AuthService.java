@@ -28,6 +28,8 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     
+    private final AuthEventPublisher authEventPublisher;
+    
     @Value("${auth.refresh-token-ttl-days}")
     private long refreshTokenTtlDays;
     
@@ -47,6 +49,8 @@ public class AuthService {
                 .build();
         
         userRepository.save(user);
+        
+        authEventPublisher.publishUserRegistered(user);
         
         return issueTokens(user);
     }
