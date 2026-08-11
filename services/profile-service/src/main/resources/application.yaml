@@ -1,0 +1,49 @@
+spring:
+  application:
+    name: profile-service
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/profile_db}
+    username: ${DB_USERNAME:fit}
+    password: ${DB_PASSWORD:fit_password}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbs:
+          time_zone: UTC
+
+  flyway:
+    enabled: true
+
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+
+  mvc:
+    problemdetails:
+      enabled: true
+
+server:
+  port: 8082
+
+auth:
+  jwt:
+    secret: ${AUTH_JWT_SECRET:local-dev-secret-local-dev-secret-local-dev-secret}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
+
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: always
