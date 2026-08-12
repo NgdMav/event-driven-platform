@@ -67,6 +67,9 @@ public class JwtAuthenticationGatewayFilter extends OncePerRequestFilter {
                     if ("X-User-Id".equalsIgnoreCase(name)) {
                         return userId;
                     }
+                    if ("Authorization".equalsIgnoreCase(name)) {
+                        return null;
+                    }
                     return super.getHeader(name);
                 }
                 
@@ -74,6 +77,9 @@ public class JwtAuthenticationGatewayFilter extends OncePerRequestFilter {
                 public Enumeration<String> getHeaders(String name) {
                     if ("X-User-Id".equalsIgnoreCase(name)) {
                         return Collections.enumeration(List.of(userId));
+                    }
+                    if ("Authorization".equalsIgnoreCase(name)) {
+                        return Collections.emptyEnumeration();
                     }
                     return super.getHeaders(name);
                 }
@@ -84,7 +90,7 @@ public class JwtAuthenticationGatewayFilter extends OncePerRequestFilter {
                     Enumeration<String> originalNames = super.getHeaderNames();
                     while (originalNames.hasMoreElements()) {
                         String name = originalNames.nextElement();
-                        if (!"X-User-Id".equalsIgnoreCase(name)) {
+                        if (!"X-User-Id".equalsIgnoreCase(name) && !"Authorization".equalsIgnoreCase(name)) {
                             names.add(name);
                         }
                     }

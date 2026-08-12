@@ -6,6 +6,8 @@ services:
       POSTGRES_DB: auth_db
       POSTGRES_USER: fit
       POSTGRES_PASSWORD: fit_password
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
     ports:
       - "5432:5432"
     volumes:
@@ -14,6 +16,35 @@ services:
       test: ["CMD-SHELL", "pg_isready -U fit -d auth_db"]
       interval: 5s
       timeout: 5s
+      retries: 10
+
+  profile-db:
+    image: postgres:latest
+    container_name: profile-db
+    environment:
+      POSTGRES_DB: profile_db
+      POSTGRES_USER: fit
+      POSTGRES_PASSWORD: fit_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - profile-db-data:/var/lib/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U fit -d profile_db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "ping" ]
+      interval: 10s
+      timeout: 10s
       retries: 10
 
 #  ./mvnw spring-boot:build-image "-Dspring-boot.build-image.imageName=ngdmav/fitnessapp-auth-service"
@@ -30,6 +61,9 @@ services:
     depends_on:
       auth-db:
         condition: service_healthy
+      rabbitmq:
+        condition: service_started
 
 volumes:
   auth-db-data:
+  profile-db-data:
