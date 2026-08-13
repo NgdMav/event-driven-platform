@@ -7,7 +7,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "processed_event")
+@Table(name = "processed_events")
 @Getter
 @Setter
 @NoArgsConstructor

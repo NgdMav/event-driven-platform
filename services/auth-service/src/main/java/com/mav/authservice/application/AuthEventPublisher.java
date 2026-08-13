@@ -1,7 +1,5 @@
 package com.mav.authservice.application;
 
-//import com.fasterxml.jackson.core.JsonProcessingException;
-//import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mav.authservice.domain.User;
 import com.mav.authservice.integration.event.UserRegisteredEvent;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
+import tools.jackson.databind.ObjectMapper;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -22,7 +21,7 @@ class AuthEventPublisher {
     public static final String ROUTING_KEY_USER_REGISTERED = "user.registered";
     
     private final RabbitTemplate rabbitTemplate;
-//    private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
     
     public void publishUserRegistered(User user) {
         try {
@@ -38,12 +37,12 @@ class AuthEventPublisher {
                     )
             );
             
-//            String json = objectMapper.writeValueAsString(event);
+            String json = objectMapper.writeValueAsString(event);
             
             rabbitTemplate.convertAndSend(
                     EXCHANGE,
                     ROUTING_KEY_USER_REGISTERED,
-                    event,
+                    json,
                     message -> {
                         message.getMessageProperties()
                                 .setContentType(MessageProperties.CONTENT_TYPE_JSON);

@@ -1,5 +1,6 @@
 package com.mav.authservice.infrastructure.config;
 
+import com.mav.authservice.infrastructure.security.InternalAuthFilter;
 import com.mav.authservice.infrastructure.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final InternalAuthFilter internalAuthFilter;
     
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -44,7 +46,8 @@ public class SecurityConfig {
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(internalAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, InternalAuthFilter.class);
         
         return http.build();
     }

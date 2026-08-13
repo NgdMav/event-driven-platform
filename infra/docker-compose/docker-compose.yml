@@ -1,4 +1,5 @@
 services:
+  # === DB ===
   auth-db:
     image: postgres:latest
     container_name: auth-db
@@ -15,7 +16,44 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    networks:
+      - fit-network
 
+  profile-db:
+    image: postgres:latest
+    container_name: profile-db
+    environment:
+      POSTGRES_DB: profile_db
+      POSTGRES_USER: fit
+      POSTGRES_PASSWORD: fit_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - profile-db-data:/var/lib/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U fit -d profile_db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - fit-network
+
+  # === Message Broker ===
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "ping" ]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    networks:
+      - fit-network
+
+  # === Services ===
 #  ./mvnw spring-boot:build-image "-Dspring-boot.build-image.imageName=ngdmav/fitnessapp-auth-service"
   auth-service:
     image: ngdmav/fitnessapp-auth-service
@@ -25,11 +63,62 @@ services:
       DB_USERNAME: fit
       DB_PASSWORD: fit_password
       AUTH_JWT_SECRET: local-dev-secret-local-dev-secret-local-dev-secret
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
     ports:
       - "8081:8081"
     depends_on:
       auth-db:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - fit-network
+
+#  ./mvnw spring-boot:build-image "-Dspring-boot.build-image.imageName=ngdmav/fitnessapp-profile-service"
+  profile-service:
+    image: ngdmav/fitnessapp-profile-service:latest
+    container_name: profile-service
+    environment:
+      DB_URL: jdbc:postgresql://profile-db:5432/profile_db
+      DB_USERNAME: fit
+      DB_PASSWORD: fit_password
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+    ports:
+      - "8082:8082"
+    depends_on:
+      profile-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - fit-network
+
+  #  ./mvnw spring-boot:build-image "-Dspring-boot.build-image.imageName=ngdmav/fitnessapp-api-gateway"
+  api-gateway:
+    image: ngdmav/fitnessapp-api-gateway:latest
+    container_name: api-gateway
+    environment:
+      AUTH_JWT_SECRET: local-dev-secret-local-dev-secret-local-dev-secret
+      AUTH_SERVICE_URL: http://auth-service:8081
+      PROFILE_SERVICE_URL: http://profile-service:8082
+    ports:
+      - "8080:8080"
+    depends_on:
+      - auth-service
+      - profile-service
+    networks:
+      - fit-network
 
 volumes:
   auth-db-data:
+  profile-db-data:
+
+networks:
+  fit-network:
+    driver: bridge

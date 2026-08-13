@@ -30,34 +30,44 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
         
-        String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String token = authorizationHeader.substring(7);
-            
-            try {
-                Claims claims = jwtService.parseToken(token);
-                
-                List<String> roles = claims.get("roles", List.class);
-                
-                List<SimpleGrantedAuthority>  authorities = roles.stream()
-                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
-                        .toList();
-                
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                claims.getSubject(),
-                                null,
-                                authorities
-                        );
-                
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                
-            } catch (JwtException | IllegalArgumentException exception) {
-                SecurityContextHolder.clearContext();
-            }
+        if (SecurityContextHolder.getContext().getAuthentication() != null
+                && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
+            filterChain.doFilter(request, response);
+            return;
         }
         
+        String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        
+        String token = authorizationHeader.substring(7);
+        
+        try {
+            Claims claims = jwtService.parseToken(token);
+            
+            List<String> roles = claims.get("roles", List.class);
+            
+            List<SimpleGrantedAuthority> authorities = roles.stream()
+                    .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                    .toList();
+            
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(
+                            claims.getSubject(),
+                            null,
+                            authorities
+                    );
+            
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            
+        } catch (JwtException | IllegalArgumentException exception) {
+            // Токен невалиден. Не очищаем контекст, просто пропускаем.
+            // Spring Security вернёт 401 для защищённых эндпоинтов.
+        }
+
         filterChain.doFilter(request, response);
     }
 }
