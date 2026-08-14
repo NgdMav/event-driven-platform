@@ -2,6 +2,8 @@ package com.mav.catalogservice.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.Instant;
 import java.util.List;
@@ -42,10 +44,8 @@ public class Exercise {
     @Column(name = "primary_muscle_group", nullable = false)
     private MuscleGroup primaryMuscleGroup;
     
-    @ElementCollection
-    @CollectionTable(name = "exercise_secondary_muscles",
-            joinColumns = @JoinColumn(name = "exercise_id"))
-    @Column(name = "muscle_group")
+    @JdbcTypeCode(SqlTypes.ARRAY)
+    @Column(name = "secondary_muscle_groups", columnDefinition = "TEXT[]")
     @Enumerated(EnumType.STRING)
     private List<MuscleGroup> secondaryMuscleGroups;
     

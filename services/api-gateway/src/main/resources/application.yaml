@@ -17,6 +17,11 @@ spring:
               predicates:
                 - Path=/api/profile/**
 
+            - id: catalog-service
+              uri: ${CATALOG_SERVICE_URL:http://localhost:8083}
+              predicates:
+                - Path=/api/catalog/**
+
 server:
   port: 8080
 
@@ -31,7 +36,10 @@ gateway:
       - /api/auth/login
       - /api/auth/refresh
       - /api/auth/logout
+      - /api/catalog/**  # <-- ДОБАВЛЕНО: каталог публичный
       - /actuator/**
+      - /swagger-ui/**
+      - /v3/api-docs/**
 
 management:
   endpoints:
