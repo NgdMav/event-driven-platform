@@ -38,6 +38,25 @@ services:
     networks:
       - fit-network
 
+  catalog-db:
+    image: postgres:latest
+    container_name: catalog-db
+    environment:
+      POSTGRES_DB: catalog_db
+      POSTGRES_USER: fit
+      POSTGRES_PASSWORD: fit_password
+    ports:
+      - "5434:5432"
+    volumes:
+      - catalog-db-data:/var/lib/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U fit -d catalog_db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - fit-network
+
   # === Message Broker ===
   rabbitmq:
     image: rabbitmq:3-management
@@ -99,6 +118,22 @@ services:
     networks:
       - fit-network
 
+  #  ./mvnw spring-boot:build-image "-Dspring-boot.build-image.imageName=ngdmav/fitnessapp-catalog-service"
+  catalog-service:
+    image: ngdmav/fitnessapp-catalog-service:latest
+    container_name: catalog-service
+    environment:
+      DB_URL: jdbc:postgresql://catalog-db:5432/catalog_db
+      DB_USERNAME: fit
+      DB_PASSWORD: fit_password
+    ports:
+      - "8083:8083"
+    depends_on:
+      catalog-db:
+        condition: service_healthy
+    networks:
+      - fit-network
+
   #  ./mvnw spring-boot:build-image "-Dspring-boot.build-image.imageName=ngdmav/fitnessapp-api-gateway"
   api-gateway:
     image: ngdmav/fitnessapp-api-gateway:latest
@@ -107,17 +142,20 @@ services:
       AUTH_JWT_SECRET: local-dev-secret-local-dev-secret-local-dev-secret
       AUTH_SERVICE_URL: http://auth-service:8081
       PROFILE_SERVICE_URL: http://profile-service:8082
+      CATALOG_SERVICE_URL: http://catalog-service:8083
     ports:
       - "8080:8080"
     depends_on:
       - auth-service
       - profile-service
+      - catalog-service
     networks:
       - fit-network
 
 volumes:
   auth-db-data:
   profile-db-data:
+  catalog-db-data:
 
 networks:
   fit-network:
