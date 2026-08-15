@@ -3,24 +3,16 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
-      <profile name="Annotation profile for api-gateway" enabled="true">
+      <profile name="Annotation profile for workout-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
         </processorPath>
         <module name="api-gateway" />
-      </profile>
-      <profile name="Annotation profile for catalog-service" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
-        </processorPath>
         <module name="profile-service" />
+        <module name="workout-service" />
         <module name="catalog-service" />
       </profile>
     </annotationProcessing>
@@ -31,6 +23,7 @@
       <module name="auth-service" options="-parameters" />
       <module name="catalog-service" options="-parameters" />
       <module name="profile-service" options="-parameters" />
+      <module name="workout-service" options="-parameters" />
     </option>
   </component>
 </project>
