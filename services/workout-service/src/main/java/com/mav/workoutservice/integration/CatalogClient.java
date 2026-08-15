@@ -28,6 +28,14 @@ public class CatalogClient {
                 .body(ExerciseDto.class);
     }
     
+    public ExerciseDto getExerciseBySlug(String slug) {
+        RestClient client = restClientBuilder.baseUrl(catalogServiceUrl).build();
+        return client.get()
+                .uri("/internal/exercises/slug/{slug}", slug)
+                .retrieve()
+                .body(ExerciseDto.class);
+    }
+    
     public List<ExerciseDto> getExercisesByIds(List<UUID> ids) {
         RestClient client = restClientBuilder.baseUrl(catalogServiceUrl).build();
         String idsParam = String.join(",", ids.stream().map(UUID::toString).toList());
