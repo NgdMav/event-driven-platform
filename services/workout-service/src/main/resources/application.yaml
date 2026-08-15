@@ -1,3 +1,59 @@
 spring:
   application:
     name: workout-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5435/workout_db}
+    username: ${DB_USERNAME:fit}
+    password: ${DB_PASSWORD:fit_password}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  flyway:
+    enabled: true
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+server:
+  port: 8084
+
+app:
+  catalog-service:
+    url: ${CATALOG_SERVICE_URL:http://localhost:8083}
+  recommendation-service:
+    url: ${RECOMMENDATION_SERVICE_URL:http://localhost:8085}
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      recommendationService:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 3
+  retry:
+    instances:
+      recommendationService:
+        max-attempts: 2
+        wait-duration: 500ms
+  timelimiter:
+    instances:
+      recommendationService:
+        timeout-duration: 3s
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: always
