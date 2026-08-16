@@ -1,17 +1,14 @@
 package com.mav.workoutservice.api;
 
 import com.mav.workoutservice.api.dto.*;
-import com.mav.workoutservice.application.AddSetUseCase;
-import com.mav.workoutservice.application.CompleteSessionUseCase;
-import com.mav.workoutservice.application.GenerateProgramUseCase;
-import com.mav.workoutservice.application.StartSessionUseCase;
+import com.mav.workoutservice.application.*;
 import com.mav.workoutservice.domain.Program;
-import com.mav.workoutservice.domain.ProgramRepository;
 import com.mav.workoutservice.domain.TrainingSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,13 +17,14 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/workouts")
 @RequiredArgsConstructor
+@Transactional
 public class WorkoutController {
     
     private final GenerateProgramUseCase generateProgramUseCase;
     private final StartSessionUseCase startSessionUseCase;
     private final AddSetUseCase addSetUseCase;
     private final CompleteSessionUseCase completeSessionUseCase;
-    private final ProgramRepository programRepository;
+    private final ProgramQueryService programQueryService;
     
     // === PROGRAMS ===
     
@@ -41,9 +39,7 @@ public class WorkoutController {
     
     @GetMapping("/programs")
     public List<ProgramResponse> getPrograms(@RequestHeader("X-User-Id") UUID userId) {
-        return programRepository.findByUserIdOrderByCreatedAtDesc(userId).stream()
-                .map(this::toResponse)
-                .toList();
+        return programQueryService.getPrograms(userId);
     }
     
     @GetMapping("/programs/{id}")
@@ -51,12 +47,7 @@ public class WorkoutController {
             @RequestHeader("X-User-Id") UUID userId,
             @PathVariable UUID id
     ) {
-        Program program = programRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Program not found"));
-        if (!program.getUserId().equals(userId)) {
-            throw new RuntimeException("Access denied");
-        }
-        return toResponse(program);
+        return programQueryService.getProgram(userId, id);
     }
     
     // === SESSIONS ===

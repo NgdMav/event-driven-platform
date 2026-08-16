@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "programs")
@@ -43,8 +41,9 @@ public class Program {
     private ProgramSource source;
     
     @OneToMany(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("dayIndex")
     @Builder.Default
-    private List<WorkoutDay> workoutDays = new ArrayList<>();
+    private Set<WorkoutDay> workoutDays = new LinkedHashSet<>();
     
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;

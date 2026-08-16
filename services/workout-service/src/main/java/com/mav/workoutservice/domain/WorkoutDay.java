@@ -3,9 +3,7 @@ package com.mav.workoutservice.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "workout_days")
@@ -31,6 +29,7 @@ public class WorkoutDay {
     private String focus;
     
     @OneToMany(mappedBy = "workoutDay", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("position")
     @Builder.Default
-    private List<WorkoutExercise> exercises = new ArrayList<>();
+    private Set<WorkoutExercise> exercises = new LinkedHashSet<>();
 }

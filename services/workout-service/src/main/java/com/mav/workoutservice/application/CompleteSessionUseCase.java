@@ -25,7 +25,7 @@ public class CompleteSessionUseCase {
     
     @Transactional
     public TrainingSession execute(UUID userId, UUID sessionId) {
-        TrainingSession session = sessionRepository.findById(sessionId)
+        TrainingSession session = sessionRepository.findWithSetLogsById(sessionId)
                 .orElseThrow(() -> new RuntimeException("Session not found"));
         
         if (!session.getUserId().equals(userId)) {
@@ -35,7 +35,6 @@ public class CompleteSessionUseCase {
         session.complete();
         sessionRepository.save(session);
         
-        // Публикуем событие через outbox
         publishSessionCompletedEvent(session);
         
         return session;
