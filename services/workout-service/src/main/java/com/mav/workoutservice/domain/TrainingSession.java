@@ -31,7 +31,8 @@ public class TrainingSession {
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private SessionStatus status;
+    @Builder.Default
+    private SessionStatus status = SessionStatus.PLANNED;
     
     @Column(name = "started_at")
     private Instant startedAt;

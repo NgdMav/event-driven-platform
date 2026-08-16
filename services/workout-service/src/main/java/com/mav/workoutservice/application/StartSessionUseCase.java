@@ -1,5 +1,6 @@
 package com.mav.workoutservice.application;
 
+import com.mav.workoutservice.domain.SessionStatus;
 import com.mav.workoutservice.domain.TrainingSession;
 import com.mav.workoutservice.domain.TrainingSessionRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class StartSessionUseCase {
                 .userId(userId)
                 .programId(programId)
                 .workoutDayId(workoutDayId)
+                .status(SessionStatus.PLANNED)
                 .build();
         
         session.start();
