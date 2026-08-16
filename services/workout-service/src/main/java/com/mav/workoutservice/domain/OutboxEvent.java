@@ -2,6 +2,8 @@ package com.mav.workoutservice.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -27,7 +29,8 @@ public class OutboxEvent {
     @Column(name = "event_type", nullable = false)
     private String eventType;
     
-    @Column(nullable = false, columnDefinition = "jsonb")
+    @Column(name = "payload", nullable = false, columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
     private String payload;
     
     @Column(name = "created_at", nullable = false)
