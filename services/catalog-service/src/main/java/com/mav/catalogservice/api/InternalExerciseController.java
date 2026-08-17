@@ -26,4 +26,9 @@ public class InternalExerciseController {
                 .map(exerciseService::getExerciseById)
                 .toList();
     }
+    
+    @GetMapping("/slug/{slug}")
+    public ExerciseDto getExerciseBySlug(@PathVariable String slug) {
+        return exerciseService.getExerciseBySlug(slug);
+    }
 }

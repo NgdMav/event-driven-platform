@@ -22,6 +22,11 @@ spring:
               predicates:
                 - Path=/api/catalog/**
 
+            - id: workout-service
+              uri: ${WORKOUT_SERVICE_URL:http://localhost:8084}
+              predicates:
+                - Path=/api/workouts/**
+
 server:
   port: 8080
 
@@ -36,7 +41,7 @@ gateway:
       - /api/auth/login
       - /api/auth/refresh
       - /api/auth/logout
-      - /api/catalog/**  # <-- ДОБАВЛЕНО: каталог публичный
+      - /api/catalog/**
       - /actuator/**
       - /swagger-ui/**
       - /v3/api-docs/**
