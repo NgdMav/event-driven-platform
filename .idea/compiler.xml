@@ -3,7 +3,7 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
-      <profile name="Annotation profile for workout-service" enabled="true">
+      <profile name="Annotation profile for recommendation-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -13,6 +13,7 @@
         <module name="api-gateway" />
         <module name="profile-service" />
         <module name="workout-service" />
+        <module name="recommendation-service" />
         <module name="catalog-service" />
       </profile>
     </annotationProcessing>
@@ -23,6 +24,7 @@
       <module name="auth-service" options="-parameters" />
       <module name="catalog-service" options="-parameters" />
       <module name="profile-service" options="-parameters" />
+      <module name="recommendation-service" options="-parameters" />
       <module name="workout-service" options="-parameters" />
     </option>
   </component>
