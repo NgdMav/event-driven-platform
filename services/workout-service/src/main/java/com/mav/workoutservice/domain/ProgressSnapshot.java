@@ -35,6 +35,9 @@ public class ProgressSnapshot {
     @Column(name = "completed_sessions", nullable = false)
     private Integer completedSessions;
     
+    @Column(name = "avg_session_duration_minutes")
+    private Integer avgSessionDurationMinutes;
+    
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
     

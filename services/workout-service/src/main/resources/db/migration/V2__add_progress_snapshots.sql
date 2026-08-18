@@ -6,6 +6,7 @@ CREATE TABLE progress_snapshots
     total_sessions     INT          NOT NULL DEFAULT 0,
     total_volume_kg    NUMERIC(12, 2) NOT NULL DEFAULT 0,
     completed_sessions INT          NOT NULL DEFAULT 0,
+    avg_session_duration_minutes INT NOT NULL DEFAULT 0,
     created_at         TIMESTAMPTZ  NOT NULL,
     updated_at         TIMESTAMPTZ  NOT NULL,
     UNIQUE (user_id, snapshot_date)
