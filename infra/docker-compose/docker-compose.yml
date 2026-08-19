@@ -86,7 +86,7 @@ services:
     ports:
       - "5436:5432"
     volumes:
-      - recommendation-db-data:/var/lib/postgresql/data
+      - recommendation-db-data:/var/lib/postgresql
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U fit -d recommendation_db" ]
       interval: 5s
@@ -238,6 +238,7 @@ volumes:
   profile-db-data:
   catalog-db-data:
   workout-db-data:
+  recommendation-db-data:
 
 networks:
   fit-network:
