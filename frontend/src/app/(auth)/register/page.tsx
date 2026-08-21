@@ -33,7 +33,7 @@ export default function RegisterPage() {
             setError('');
             const { confirmPassword, ...payload } = data;
 
-            const res = await api.post('/api/auth/register', payload);
+            const res = await api.post('/auth/register', payload);
 
             setTokens(res.data.accessToken, res.data.refreshToken);
             router.push('/profile');
