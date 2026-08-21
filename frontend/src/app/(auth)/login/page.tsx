@@ -27,7 +27,7 @@ export default function LoginPage() {
     const onSubmit = async (data: LoginForm) => {
         try {
             setError('');
-            const res = await api.post('/auth/login', data);
+            const res = await api.post('/api/auth/login', data);
             setTokens(res.data.accessToken, res.data.refreshToken);
             router.push('/profile');
         } catch (err: any) {
