@@ -22,6 +22,11 @@ spring:
               predicates:
                 - Path=/api/catalog/**
 
+            - id: recommendation-service
+              uri: ${WORKOUT_SERVICE_URL:http://localhost:8084}
+              predicates:
+                - Path=/api/recommendations/**
+
             - id: workout-service
               uri: ${WORKOUT_SERVICE_URL:http://localhost:8084}
               predicates:
