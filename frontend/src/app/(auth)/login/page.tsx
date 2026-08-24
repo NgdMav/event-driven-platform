@@ -1,60 +1,100 @@
 'use client';
+
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { api } from '@/lib/api';
+import { authClient } from '@/lib/api/clients/auth';
 import { useAuthStore } from '@/store/auth-store';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { extractError } from '@/lib/error';
 
 const loginSchema = z.object({
     email: z.string().email('Некорректный email'),
-    password: z.string().min(6, 'Минимум 6 символов'),
+    password: z.string().min(1, 'Введите пароль'),
 });
 
 type LoginForm = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
     const router = useRouter();
-    const setTokens = useAuthStore((s) => s.setTokens);
-    const [error, setError] = useState('');
+    const setAuth = useAuthStore((s) => s.setAuth);
+    const [serverError, setServerError] = useState('');
 
-    const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginForm>({
-        resolver: zodResolver(loginSchema),
-    });
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<LoginForm>({ resolver: zodResolver(loginSchema) });
 
     const onSubmit = async (data: LoginForm) => {
         try {
-            setError('');
-            const res = await api.post('/auth/login', data);
-            setTokens(res.data.accessToken, res.data.refreshToken);
-            router.push('/profile');
-        } catch (err: any) {
-            setError(err.response?.data?.detail || 'Ошибка входа');
+            setServerError('');
+            const res = await authClient.login(data.email, data.password);
+            setAuth(res.accessToken, res.refreshToken);
+            router.push('/exercises');
+        } catch (err) {
+            setServerError(extractError(err));
         }
     };
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-gray-50">
-            <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-lg">
-                <h1 className="text-2xl font-bold mb-6 text-center">Вход в FitPlatform</h1>
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
+            <div className="w-full max-w-md rounded-xl border border-gray-100 bg-white p-8 shadow-lg">
+                <h1 className="mb-6 text-center text-2xl font-bold text-gray-800">
+                    Вход в FitPlatform
+                </h1>
+
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                     <div>
-                        <input {...register('email')} placeholder="Email" className="w-full p-2 border rounded" />
-                        {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+                        <label className="mb-1 block text-sm font-medium text-gray-700">Email</label>
+                        <input
+                            {...register('email')}
+                            type="email"
+                            autoComplete="email"
+                            placeholder="your@email.com"
+                            className="w-full rounded-lg border border-gray-300 p-2.5 outline-none transition focus:border-transparent focus:ring-2 focus:ring-blue-500"
+                        />
+                        {errors.email && (
+                            <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
+                        )}
                     </div>
+
                     <div>
-                        <input {...register('password')} type="password" placeholder="Пароль" className="w-full p-2 border rounded" />
-                        {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+                        <label className="mb-1 block text-sm font-medium text-gray-700">Пароль</label>
+                        <input
+                            {...register('password')}
+                            type="password"
+                            autoComplete="current-password"
+                            placeholder="••••••••"
+                            className="w-full rounded-lg border border-gray-300 p-2.5 outline-none transition focus:border-transparent focus:ring-2 focus:ring-blue-500"
+                        />
+                        {errors.password && (
+                            <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>
+                        )}
                     </div>
-                    {error && <p className="text-red-500 text-sm text-center">{error}</p>}
-                    <button type="submit" disabled={isSubmitting} className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 disabled:opacity-50">
+
+                    {serverError && (
+                        <div className="rounded-lg border border-red-200 bg-red-50 p-3">
+                            <p className="text-center text-sm font-medium text-red-600">{serverError}</p>
+                        </div>
+                    )}
+
+                    <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full rounded-lg bg-blue-600 p-2.5 font-medium text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
                         {isSubmitting ? 'Вход...' : 'Войти'}
                     </button>
                 </form>
-                <p className="text-center mt-4 text-sm text-gray-600">
-                    Нет аккаунта? <Link href="/register" className="text-blue-600 hover:underline">Зарегистрироваться</Link>
+
+                <p className="mt-6 text-center text-sm text-gray-600">
+                    Нет аккаунта?{' '}
+                    <Link href="/register" className="font-medium text-blue-600 hover:underline">
+                        Зарегистрироваться
+                    </Link>
                 </p>
             </div>
         </div>

@@ -57,7 +57,7 @@ export default function Home() {
                 <ChevronRight className="h-4 w-4" />
               </Link>
               <Link
-                  href="/catalog"
+                  href="/exercises"
                   className="flex h-12 w-full sm:w-auto items-center justify-center rounded-full border border-zinc-300 dark:border-zinc-700 px-8 text-base font-medium hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
               >
                 Смотреть каталог упражнений
