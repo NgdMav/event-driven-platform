@@ -43,3 +43,13 @@ export function useExercise(slug: string) {
         enabled: !!slug,
     });
 }
+
+export function useExerciseById(id: string) {
+    return useQuery({
+        queryKey: ['exercise-by-id', id],
+        queryFn: () => catalogClient.getById(id),
+        enabled: !!id,
+        staleTime: 10 * 60 * 1000,
+        gcTime: 30 * 60 * 1000,
+    });
+}

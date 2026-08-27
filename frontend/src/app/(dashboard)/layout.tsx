@@ -4,7 +4,7 @@ import { useAuthStore } from '@/store/auth-store';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import Link from 'next/link';
-import { LogOut, User, Dumbbell, Sparkles } from 'lucide-react';
+import { LogOut, User, Dumbbell, Sparkles, LayoutGrid } from 'lucide-react';
 import { authClient } from '@/lib/api/clients/auth';
 import { useCurrentUser } from '@/hooks/useAuth';
 
@@ -44,6 +44,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     </Link>
                     <Link href="/exercises" className="flex items-center gap-2 hover:text-blue-600">
                         <Dumbbell size={18} /> Упражнения
+                    </Link>
+                    <Link href="/programs" className="flex items-center gap-2 hover:text-blue-600">
+                        <LayoutGrid size={18} /> Программы
                     </Link>
                     <Link href="/workout/recommend" className="flex items-center gap-2 hover:text-blue-600">
                         <Sparkles size={18} /> Программа

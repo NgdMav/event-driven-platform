@@ -1,49 +1,52 @@
 import { api } from '@/lib/api';
 import type {
-    CompleteSessionResponse,
-    GenerateProgramRequest,
-    GenerateProgramResponse,
-    LogSetRequest,
+    AddSetRequest,
+    Program,
+    Session,
+    StartSessionRequest,
+} from '@/lib/types/workout';
+import type {
     ProgramRecommendationRequest,
     ProgramRecommendationResponse,
-    WorkoutSessionResponse,
 } from '@/lib/workout-types';
 
-// ---------------------------------------------------------------------------
-// Integration notes (backend reality vs. this contract):
-//  - The gateway currently routes only /api/workouts/**, /api/auth/**,
-//    /api/profile/**, /api/catalog/**. The spec's /api/recommendations/**
-//    endpoint is NOT routed yet — add a gateway route or rename to
-//    /api/workouts/recommendations to reach it.
-//  - The real GenerateProgramRequest is goal-based (goal, experienceLevel,
-//    daysPerWeek, activityLevel) rather than { templateId }. Adapt here if you
-//    want to call the live endpoint instead of a recommendations-id flow.
-//  - The real backend has no GET /sessions/{id}; sessions are returned from
-//    POST /sessions and /sessions/{id}/sets. Wire getSession to the actual
-//    source (e.g. program day + started session) when available.
-// ---------------------------------------------------------------------------
-
 export const workoutClient = {
+    // ----- Programs -----
+    getPrograms: () => api.get<Program[]>('/workouts/programs').then((r) => r.data),
+
+    getProgram: (id: string) =>
+        api.get<Program>(`/workouts/programs/${id}`).then((r) => r.data),
+
+    generateProgram: (req: GenerateProgramRequest) =>
+        api.post<Program>('/workouts/programs/generate', req).then((r) => r.data),
+
+    // ----- Sessions -----
+    startSession: (req: StartSessionRequest) =>
+        api.post<Session>('/workouts/sessions', req).then((r) => r.data),
+
+    addSet: (sessionId: string, req: AddSetRequest) =>
+        api
+            .post<Session['setLogs'][number]>(
+                `/workouts/sessions/${sessionId}/sets`,
+                req
+            )
+            .then((r) => r.data),
+
+    completeSession: (sessionId: string) =>
+        api
+            .post<Session>(`/workouts/sessions/${sessionId}/complete`, {})
+            .then((r) => r.data),
+
+    // ----- Recommendation (pre-generation step, already wired) -----
     recommend: (req: ProgramRecommendationRequest) =>
         api
             .post<ProgramRecommendationResponse>('/recommendations/program', req)
             .then((r) => r.data),
-
-    generateProgram: (req: GenerateProgramRequest) =>
-        api
-            .post<GenerateProgramResponse>('/workouts/programs/generate', req)
-            .then((r) => r.data),
-
-    getSession: (sessionId: string) =>
-        api
-            .get<WorkoutSessionResponse>(`/workouts/sessions/${sessionId}`)
-            .then((r) => r.data),
-
-    logSet: (sessionId: string, req: LogSetRequest) =>
-        api.post(`/workouts/sessions/${sessionId}/sets`, req).then((r) => r.data),
-
-    completeSession: (sessionId: string) =>
-        api
-            .post<CompleteSessionResponse>(`/workouts/sessions/${sessionId}/complete`, {})
-            .then((r) => r.data),
 };
+
+export interface GenerateProgramRequest {
+    goal: string;
+    experienceLevel: string;
+    daysPerWeek: number;
+    activityLevel?: string;
+}

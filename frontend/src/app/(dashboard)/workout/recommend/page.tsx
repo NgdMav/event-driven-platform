@@ -113,9 +113,9 @@ export default function RecommendPage() {
             daysPerWeek: submitted.daysPerWeek,
         };
         generate.mutate(payload, {
-            onSuccess: () => {
+            onSuccess: (program) => {
                 toast('Программа создана — погнали!', 'success');
-                router.push('/profile');
+                router.push(`/programs/${program.id}`);
             },
             onError: () => toast('Не удалось создать программу', 'error'),
         });
