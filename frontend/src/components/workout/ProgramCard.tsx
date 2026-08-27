@@ -18,10 +18,10 @@ export function ProgramCard({ program }: { program: Program }) {
     return (
         <Link
             href={`/programs/${program.id}`}
-            className="group block rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition hover:border-emerald-300 hover:shadow-md"
+            className="group block rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition hover:border-blue-300 hover:shadow-md"
         >
             <div className="flex items-start justify-between gap-2">
-                <h3 className="text-base font-semibold text-gray-900 group-hover:text-emerald-700">
+                <h3 className="text-base font-semibold text-gray-900 group-hover:text-blue-700">
                     {program.name}
                 </h3>
                 <span
@@ -34,7 +34,7 @@ export function ProgramCard({ program }: { program: Program }) {
                 </span>
             </div>
 
-            <p className="mt-1 text-sm text-emerald-600">
+            <p className="mt-1 text-sm text-blue-600">
                 {PROGRAM_GOAL_LABELS[program.goal] ?? program.goal}
             </p>
 

@@ -12,6 +12,7 @@ import {
 import { Spinner } from '@/components/Spinner';
 import { ErrorState } from '@/components/ErrorState';
 import { EmptyState } from '@/components/EmptyState';
+import { Badge } from '@/components/Badge';
 
 export default function ExerciseDetailPage() {
     const params = useParams<{ slug: string }>();
@@ -71,9 +72,9 @@ export default function ExerciseDetailPage() {
                     <h1 className="text-2xl font-bold text-gray-900">{exercise.name}</h1>
 
                     <div className="mt-3 flex flex-wrap gap-2">
-                        <Badge color="blue">{MUSCLE_GROUP_LABELS[exercise.primaryMuscleGroup]}</Badge>
-                        <Badge color="gray">{DIFFICULTY_LABELS[exercise.difficulty]}</Badge>
-                        <Badge color="purple">{EQUIPMENT_LABELS[exercise.equipment]}</Badge>
+                        <Badge variant="blue">{MUSCLE_GROUP_LABELS[exercise.primaryMuscleGroup]}</Badge>
+                        <Badge variant="gray">{DIFFICULTY_LABELS[exercise.difficulty]}</Badge>
+                        <Badge variant="purple">{EQUIPMENT_LABELS[exercise.equipment]}</Badge>
                     </div>
 
                     {exercise.secondaryMuscleGroups.length > 0 && (
@@ -81,12 +82,9 @@ export default function ExerciseDetailPage() {
                             <h3 className="text-sm font-semibold text-gray-700">Дополнительные мышцы</h3>
                             <div className="mt-2 flex flex-wrap gap-2">
                                 {exercise.secondaryMuscleGroups.map((m) => (
-                                    <span
-                                        key={m}
-                                        className="rounded bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600"
-                                    >
-                                        {MUSCLE_GROUP_LABELS[m]}
-                                    </span>
+                                <Badge key={m} variant="gray">
+                                    {MUSCLE_GROUP_LABELS[m]}
+                                </Badge>
                                 ))}
                             </div>
                         </div>
@@ -119,17 +117,6 @@ function Section({ title, body }: { title: string; body: string }) {
             <h3 className="text-sm font-semibold text-gray-700">{title}</h3>
             <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-gray-600">{body}</p>
         </div>
-    );
-}
-
-function Badge({ color, children }: { color: 'blue' | 'gray' | 'purple'; children: React.ReactNode }) {
-    const styles = {
-        blue: 'bg-blue-100 text-blue-800',
-        gray: 'bg-gray-100 text-gray-700',
-        purple: 'bg-purple-100 text-purple-800',
-    }[color];
-    return (
-        <span className={`rounded px-2 py-0.5 text-xs font-medium ${styles}`}>{children}</span>
     );
 }
 

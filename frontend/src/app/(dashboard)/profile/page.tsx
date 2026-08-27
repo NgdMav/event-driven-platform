@@ -162,11 +162,11 @@ export default function ProfilePage() {
                     <button
                         type="submit"
                         disabled={updateMutation.isPending}
-                        className="rounded-lg bg-green-600 px-5 py-2.5 font-medium text-white shadow-sm transition-colors hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
+                        className="rounded-lg bg-blue-600 px-5 py-2.5 font-medium text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                         {updateMutation.isPending ? 'Сохранение...' : 'Сохранить'}
                     </button>
-                    {success && <span className="text-sm font-medium text-green-600">Профиль обновлён</span>}
+                    {success && <span className="text-sm font-medium text-blue-600">Профиль обновлён</span>}
                 </div>
 
                 {updateMutation.isError && (

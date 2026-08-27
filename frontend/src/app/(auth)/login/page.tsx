@@ -40,8 +40,7 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
-            <div className="w-full max-w-md rounded-xl border border-gray-100 bg-white p-8 shadow-lg">
+        <div className="w-full max-w-md rounded-xl border border-gray-100 bg-white p-8 shadow-lg">
                 <h1 className="mb-6 text-center text-2xl font-bold text-gray-800">
                     Вход в FitPlatform
                 </h1>
@@ -96,7 +95,6 @@ export default function LoginPage() {
                         Зарегистрироваться
                     </Link>
                 </p>
-            </div>
         </div>
     );
 }

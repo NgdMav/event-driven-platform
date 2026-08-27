@@ -32,14 +32,14 @@ export function SetRow({
             className={cn(
                 'rounded-lg border p-3 transition',
                 completed
-                    ? 'border-emerald-300 bg-emerald-50'
+                    ? 'border-blue-300 bg-blue-50'
                     : 'border-gray-200 bg-white'
             )}
         >
             <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-gray-700">Подход {setNumber}</span>
                 {completed && (
-                    <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700">
+                    <span className="inline-flex items-center gap-1 text-xs font-medium text-blue-700">
                         <Check className="h-3.5 w-3.5" /> Готово
                     </span>
                 )}
@@ -75,7 +75,7 @@ export function SetRow({
                 className={cn(
                     'mt-3 flex w-full items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-semibold transition active:scale-[0.99]',
                     completed
-                        ? 'bg-emerald-600 text-white'
+                        ? 'bg-blue-600 text-white'
                         : 'bg-gray-900 text-white hover:bg-gray-800'
                 )}
             >

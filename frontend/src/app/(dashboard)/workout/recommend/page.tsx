@@ -34,6 +34,7 @@ import type {
     WorkoutGoal,
 } from '@/lib/workout-types';
 import { CheckCircle2, Loader2, Sparkles } from 'lucide-react';
+import { ErrorState } from '@/components/ErrorState';
 
 const recommendSchema = z.object({
     goal: z.string().min(1, 'Выберите цель'),
@@ -247,15 +248,13 @@ export default function RecommendPage() {
             </Card>
 
             {recommend.isError && (
-                <p className="mt-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600">
-                    Не удалось получить рекомендацию. Попробуйте ещё раз.
-                </p>
+                <ErrorState message="Не удалось получить рекомендацию. Попробуйте ещё раз." />
             )}
 
             {recommendation && (
-                <Card className="mt-6 border-emerald-200">
+                <Card className="mt-6 border-blue-200">
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2 text-emerald-700">
+                        <CardTitle className="flex items-center gap-2 text-blue-700">
                             <CheckCircle2 className="h-5 w-5" /> Рекомендованная программа
                         </CardTitle>
                         <CardDescription>
@@ -283,7 +282,7 @@ export default function RecommendPage() {
                                     {recommendation.suggestedFocus.map((f) => (
                                         <span
                                             key={f}
-                                            className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-800"
+                                            className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800"
                                         >
                                             {f}
                                         </span>
@@ -296,7 +295,7 @@ export default function RecommendPage() {
                         <Button
                             onClick={handleGenerate}
                             disabled={generate.isPending}
-                            className="w-full bg-emerald-600 hover:bg-emerald-700 sm:w-auto"
+                            className="w-full bg-blue-600 hover:bg-blue-700 sm:w-auto"
                         >
                             {generate.isPending ? (
                                 <>

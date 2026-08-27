@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Badge } from '@/components/Badge';
 import {
     DIFFICULTY_LABELS,
     EQUIPMENT_LABELS,
@@ -17,15 +18,9 @@ export function ExerciseCard({ exercise }: { exercise: ExerciseDto }) {
             </h3>
 
             <div className="mt-2 flex flex-wrap gap-2">
-                <span className="rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800">
-                    {MUSCLE_GROUP_LABELS[exercise.primaryMuscleGroup]}
-                </span>
-                <span className="rounded bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700">
-                    {DIFFICULTY_LABELS[exercise.difficulty]}
-                </span>
-                <span className="rounded bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-800">
-                    {EQUIPMENT_LABELS[exercise.equipment]}
-                </span>
+                <Badge variant="blue">{MUSCLE_GROUP_LABELS[exercise.primaryMuscleGroup]}</Badge>
+                <Badge variant="gray">{DIFFICULTY_LABELS[exercise.difficulty]}</Badge>
+                <Badge variant="purple">{EQUIPMENT_LABELS[exercise.equipment]}</Badge>
             </div>
 
             {exercise.description && (

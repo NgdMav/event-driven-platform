@@ -116,7 +116,7 @@ export default function ProgramDetailPage() {
                         {PROGRAM_STATUS_LABELS[program.status]}
                     </span>
                 </div>
-                <p className="mt-1 text-sm text-emerald-600">
+                <p className="mt-1 text-sm text-blue-600">
                     {PROGRAM_GOAL_LABELS[program.goal] ?? program.goal}
                 </p>
                 <div className="mt-4 flex flex-wrap gap-3 text-xs text-gray-500">

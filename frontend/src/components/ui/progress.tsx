@@ -5,7 +5,7 @@ export function Progress({ value, className }: { value: number; className?: stri
     return (
         <div className={cn('h-2 w-full overflow-hidden rounded-full bg-gray-200', className)}>
             <div
-                className="h-full rounded-full bg-emerald-500 transition-all duration-300"
+                className="h-full rounded-full bg-primary transition-all duration-300"
                 style={{ width: `${pct}%` }}
             />
         </div>
